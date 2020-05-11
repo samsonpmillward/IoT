@@ -12,8 +12,7 @@ C = 8.76741*10^-8
 --gpio.mode(buttonPin, gpio.INPUT)
 --gpio.write(buttonPin, gpio.LOW)
 
---pinMode(pinNumber, INPUT);
---digitalWrite(pinNumber, HIGH)
+
 function ln(x)      --natural logarithm function for x>0 real values
     local y = (x-1)/(x+1)
     local sum = 1 
@@ -39,9 +38,16 @@ while true do
 
     Vout = (adc_value * VCC) / adc_resolution
     Rth = (VCC * R2 / Vout) - R2
-    temperature = (1 / (A + (B * ln(Rth)) + (C * (ln(Rth))^3)))   -- Temperature in kelvin
-    temperature = temperature - 273.15  -- Temperature in degree celsius
-   
-    print(string.format("Temperature = %0.3g °C",temperature))
-    tmr.delay(100000)
-end
+    
+        temperature = (1 / (A + (B * ln(Rth)) + (C * (ln(Rth))^3)))   -- Temperature in kelvin
+        temperature = temperature - 273.15  -- Temperature in degree celsius
+        if (temperature != -273) {
+        --pinMode(A0, OUTPUT)
+       -- digitalWrite(A0, HIGH)
+            print(string.format("Temperature = %0.3g °C",temperature));
+        --print(digitalRead(A0))
+            tmr.delay(100000);
+        }
+       
+    
+
