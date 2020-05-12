@@ -5,6 +5,9 @@
 dht DHT;
 U8GLIB_SH1106_128X64 u8g(4, 5, 6, 7);  // SW SPI Com: SCK = 4, MOSI = 5, CS = 6, A0 = 7 (new blue HalTec OLED)
 
+String users[] = {"a","b","c","d"};
+int i = 0;
+
 int buttonPin = 2;
 
 #define DHT11_PIN 3
@@ -14,14 +17,22 @@ void u8g_prepare(void) {
   u8g.setFontRefHeightExtendedText();
   u8g.setDefaultForegroundColor();
   u8g.setFontPosTop();
-  u8g.setPrintPos(3,15);
+  u8g.setPrintPos(0,0);
 }
 
-
+void drawUser(void) {
+  u8g_prepare();
+  u8g.print("User: ");
+  u8g.print(users[i]);
+}
 
 void draw(void) {
   u8g_prepare();
-  u8g.print("Temperature = ");
+  u8g.print("User: ");
+  u8g.print(users[i]);
+  u8g.println();
+  u8g.setPrintPos(0,20);
+  u8g.println("Temperature = ");
   u8g.print(DHT.temperature);
   
 }
@@ -43,8 +54,17 @@ void loop()
   u8g.firstPage();
   int chk = DHT.read11(DHT11_PIN);
   int buttonValue = digitalRead(buttonPin);
+  
   if (buttonValue == LOW) {
-    Serial.println("hello");
+    Serial.println(users[i]);
+    do {
+        drawUser();
+      }
+      while ( u8g.nextPage() );
+    if (i == 4) {
+      i = 0;
+    }
+    i++;
     delay(1000);
   }
   if (DHT.temperature != -999) {
